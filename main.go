@@ -2,35 +2,48 @@ package main
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
+	"gopassword/validation"
 	"os"
-	passwd "passwd/internal"
 )
 
-func main() {
-	passwd.Hello("Miriam")
-
-	// Check for existent password CSV
+func run() error {
 	fmt.Println("Introduce your password file")
+
 	var path string
 	fmt.Scan(&path)
-	// Send it to external functions - Validate file exists && has CSV extension
-	resultPath := passwd.CheckExists(path)
 
-	// If all good - proceed to open it
-	if passwd.CheckCSV(resultPath, path) == "Exists && is CSV" {
-		// open and read file - intended structure is:
-		// user, site/app (account), password
-		file, err := os.Open(path)
-		if err != nil {
-			fmt.Println(err)
-		}
-		reader := csv.NewReader(file)
-		records, _ := reader.ReadAll()
+	if !validation.FileExists(path) {
+		return errors.New("Validation Failed @ FileExists")
+	}
 
-		fmt.Println(records)
-		// upgrade path: add date of last modification, email, base64 encryption
-	} else {
-		fmt.Println("Exists but is not CSV")
+	if !validation.IsCSV(path) {
+		return errors.New("Validation Failed @ IsCSV")
+	}
+
+	file, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+
+	reader := csv.NewReader(file)
+	// don't ignore errors.
+	records, err := reader.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(records)
+	return nil
+
+}
+
+func main() {
+	validation.Hello("Miriam")
+
+	err := run()
+	if err != nil {
+		fmt.Println(err)
 	}
 }
