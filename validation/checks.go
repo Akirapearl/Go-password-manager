@@ -14,6 +14,7 @@ func Hello(name string) {
 }
 
 func FileExists(path string) bool {
+	// Checks file exists
 	_, err := os.Stat(path)
 	return !errors.Is(err, os.ErrNotExist)
 }
@@ -21,6 +22,13 @@ func FileExists(path string) bool {
 // Returning a bool for valiation checks.
 // Function doesn't need to be aware of previous validation.
 func IsCSV(path string) bool {
+	// Checks file is CSV
 	ext := strings.ToLower(filepath.Ext(path))
 	return ext == ".csv"
 }
+
+/*
+func CsvStructured(path string) bool {
+	// Check CSV is user,account,password
+}
+*/
