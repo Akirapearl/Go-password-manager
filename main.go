@@ -1,11 +1,11 @@
 package main
 
 import (
-	"encoding/csv"
 	"errors"
 	"fmt"
+	"gopassword/change"
+	"gopassword/read"
 	"gopassword/validation"
-	"os"
 )
 
 func run() error {
@@ -22,52 +22,15 @@ func run() error {
 		return errors.New("Validation Failed @ IsCSV")
 	}
 
-	// File variable declaration - Opens file after checking its an existent CSV
-	file, err := os.Open(path)
-	if err != nil {
-		return err
-	}
+	// Read content first
+	fmt.Println("=== Current content of your file ===")
+	read.ReadFile(path)
 
-	// Reads file
-	reader := csv.NewReader(file)
-	// don't ignore errors.
-	records, err := reader.ReadAll()
-	if err != nil {
-		return err
-	}
+	// Write single line to file
+	change.WriteLine(path)
 
-	fmt.Println(records)
-
-	file.Close()
-
-	// Open the CSV file for appending
-	fileW, err := os.OpenFile("test.csv", os.O_CREATE|os.O_WRONLY|os.O_APPEND, os.ModePerm)
-
-	if err != nil {
-		return err
-	}
-
-	// Create a CSV writer
-	writer := csv.NewWriter(fileW)
-	defer writer.Flush()
-
-	// Write a new row to the CSV file
-	row := []string{"NinjaPop", "Google", "P@ssw0rd"}
-	err = writer.Write(row)
-	if err != nil {
-		panic(err)
-	}
-
-	// Reads file
-	reader2 := csv.NewReader(fileW)
-	// don't ignore errors.
-	records2, err := reader2.ReadAll()
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(records2)
-
+	fmt.Println("=== Updated content of your file - Insert ===")
+	read.ReadFile(path)
 	/*---WARNING---*/
 	// Every single line of code needs to be above the return nil line below
 	// Otherwise it will return unreachable code
@@ -77,6 +40,7 @@ func run() error {
 }
 
 func main() {
+	// Custom greeter
 	validation.Hello("Miriam")
 
 	err := run()
