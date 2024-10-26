@@ -6,6 +6,7 @@ import (
 	"gopassword/change"
 	"gopassword/read"
 	"gopassword/validation"
+	"time"
 )
 
 func run() error {
@@ -26,6 +27,8 @@ func run() error {
 	fmt.Println("=== Current content of your file ===")
 	read.ReadFile(path)
 
+	time.Sleep(5 * time.Second)
+	fmt.Print("\033[;1H\033[2J")
 	// Write single line to file
 	change.WriteLine(path)
 
