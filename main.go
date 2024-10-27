@@ -28,26 +28,48 @@ func run() error {
 	read.ReadFile(path)
 
 	//Check file - then clear the screen
-	time.Sleep(5 * time.Second)
+	time.Sleep(3 * time.Second)
 	fmt.Print("\033[;1H\033[2J")
 
-	for {
-		// Write single line to file
-		change.WriteLine(path)
+	fmt.Println("Do you want to insert a new set of credentials?[y/n]")
+	var insertData string
+	fmt.Scan(&insertData)
 
-		fmt.Println("=== Updated content of your file - Insert ===")
-		fmt.Printf("\n")
-		read.ReadFile(path)
+	// Write new entries
+	if insertData != "y" && insertData != "Y" {
 
-		fmt.Println("\n Do you want to enter more data?[y/n]")
+	} else {
+		for {
+			// Write single line to file
+			change.WriteLine(path)
 
-		var respData string
-		fmt.Scan(&respData)
+			fmt.Println("=== Updated content of your file - Insert ===")
+			fmt.Printf("\n")
+			read.ReadFile(path)
 
-		if respData != "y" && respData != "Y" {
-			break
+			fmt.Println("\n Do you want to enter more data?[y/n]")
+
+			var respData string
+			fmt.Scan(&respData)
+
+			if respData != "y" && respData != "Y" {
+				break
+			}
+			fmt.Print("\033[;1H\033[2J")
 		}
-		fmt.Print("\033[;1H\033[2J")
+	}
+
+	fmt.Println("Do you want to update a set of credentials?[y/n]")
+	var updateData string
+	fmt.Scan(&updateData)
+
+	// Write new entries
+	if updateData != "y" && updateData != "Y" {
+		return nil
+	} else {
+		// Update a single register
+		change.UpdateLine(path)
+
 	}
 	/*---WARNING---*/
 	// Every single line of code needs to be above the return nil line below
