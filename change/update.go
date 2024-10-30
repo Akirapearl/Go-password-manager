@@ -74,7 +74,6 @@ func UpdateLine(file string) {
 			Column2: line[1],
 			Column3: line[2],
 		}
-
 		if data.Column1 == dataUpdate[updatePrompt] {
 			fmt.Println("it worked", data.Column1)
 		}
