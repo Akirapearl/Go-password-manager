@@ -28,7 +28,7 @@ func WriteLine(file string) {
 
 	// Open the CSV file for appending
 	fileW, err := os.OpenFile(file, os.O_CREATE|os.O_WRONLY|os.O_APPEND, os.ModePerm)
-
+	check(err)
 	// Create a CSV writer
 	writer := csv.NewWriter(fileW)
 
